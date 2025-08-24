@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getAllRooms } from "../utils/APIFunctions";
+import { deleteRoom, getAllRooms } from "../utils/APIFunctions";
 import RoomFilter from "../common/RoomFilter";
 import RoomPaginator from "../common/RoomPaginator";
 import { Row, Col } from "react-bootstrap";
+import {FaEdit, FaEye, FaPlus, FaTrashAlt} from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 
 
@@ -52,6 +54,25 @@ useEffect(() => {
 }, [rooms, selectedRoomType])
 
 
+const handleDelete = async(roomId) => {
+    try {
+        const result = await deleteRoom(roomId)
+        if(result === ""){
+            setSuccessMessage(`Room No ${roomId} was delete`)
+            fetchRooms()
+        } else {
+            console.log(`Error deleting room: ${result.message}`)
+        }
+    } catch (error) {
+        setErrorMessage(error.message)
+    }
+    setTimeout(() => {
+        setSuccessMessage("")
+        setErrorMessage("")
+    }, 3000)
+}
+
+
 const handlePaginationClick = (pageNumber) => {
     setCurrentPage(pageNumber)
 }
@@ -73,16 +94,21 @@ return (
     ): (
         <>
         <section className="container">
-        <div className="d-flex justify-content-center mb-3 mt-5">
-            <h2 className="read-the-docs">Existing Rooms</h2>
+        <div className="d-flex justify-content-between mb-3 mt-5">
+            <h2>Existing Rooms</h2>
         </div>
 
-        <Row className="mb-3">
+        <Row>
             <Col md={6} className="mb-3 mb-md-0">
-            <RoomFilter data={rooms} setFilteredData={setFilteredRooms} />
+                <RoomFilter data={rooms} setFilteredData={setFilteredRooms} />
+            </Col>
+
+            <Col md={6} className="d-flex justify-content-end">
+                <Link to={"/add-room"}>
+                    <FaPlus /> Add Room
+                </Link>
             </Col>
         </Row>
-
         <table className="table table-bordered table-hover">
             <thead>
             <tr className="text-center">
@@ -95,12 +121,24 @@ return (
             <tbody>
             {currentRooms.map((room) => (
                 <tr key={room.id} className="text-center">
-                 <td>{room.id}</td>   
+                <td>{room.id}</td>   
                 <td>{room.roomType}</td>
                 <td>{room.roomPrice}</td>
-                <td>
-                    <button className="btn btn-outline-primary">View / Edit</button>
-                    <button className="btn btn-outline-danger ms-2">Delete</button>
+                <td className="gap-2">
+                    <Link to={`/edit-room/${room.id}`}>
+                        <span className="btn btn-info btn-sm"> 
+                            <FaEye /> 
+                        </span>
+                        <span className="btn btn-warning btn-sm"> 
+                            <FaEdit /> 
+                        </span>
+                    </Link>
+                    <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(room.id)}
+                    >
+                        <FaTrashAlt />
+                    </button>
                 </td>
                 </tr>
             ))}

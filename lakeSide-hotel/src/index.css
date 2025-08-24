@@ -78,6 +78,17 @@ body {
     border-left: '0.5px solid black';
     height: '100vh'
   }
+.text-container {
+  text-align: left;       /* Căn nội dung text sang trái */
+  justify-content: flex-start; /* Nếu dùng flexbox, đẩy nội dung sang trái */
+  align-items: flex-start;     /* Nếu cần căn theo chiều dọc */
+}
+
+.button-pink {
+  background-color: #b31247;
+  color: #ffffff;      /* Màu hồng nổi bật */
+}
+
 
 
 

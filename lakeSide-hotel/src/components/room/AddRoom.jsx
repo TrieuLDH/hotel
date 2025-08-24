@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { addRoom } from "../utils/APIFunctions"
 import RoomTypeSelector from "../common/RoomTypeSelector";
+import { Link } from "react-router-dom";
 
 const AddRoom = () => {
     const [newRoom, setNewRoom] = useState({
@@ -77,14 +78,14 @@ const AddRoom = () => {
             <section className="container, mt-5 mb-5">
                 <div className="row justify-content-center">
                     <div className="col-md-8 col-lg-6">
-                        <h2 className="mt-5 mb-2">Add New Room</h2>
+                        <h2 className="mt-5 mb-2">Add a New Room</h2>
                         {successMessage && (
                             <div className="alert alert-success fade show">{successMessage} </div>
                         )}
 
-                        {errorMessage && (
+                        {errorMessage && 
                             <div className="alert alert-danger fade show">{errorMessage} </div>
-                        )}
+                        }
                         <form onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <label htmlFor="roomType" className="form-label">
@@ -133,6 +134,9 @@ const AddRoom = () => {
                             
 
                             <div className="d-grid d-md-flex mt-2">
+                                <Link to={"/existing-rooms"} className="btn btn-btn-outline-info">
+                                    Back
+                                </Link>
                                 <button className="btn btn-outline-primary ml-5">
                                     Save Room
                                 </button>
