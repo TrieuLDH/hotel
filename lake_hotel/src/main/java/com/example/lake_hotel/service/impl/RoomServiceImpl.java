@@ -1,5 +1,6 @@
 package com.example.lake_hotel.service.impl;
 
+import com.example.lake_hotel.exception.InternalServerException;
 import com.example.lake_hotel.exception.ResourceNotFoundException;
 import com.example.lake_hotel.model.Room;
 import com.example.lake_hotel.repository.RoomRepo;
@@ -56,5 +57,33 @@ public class RoomServiceImpl implements IRoomService {
             return photoBlob.getBytes(1, (int) photoBlob.length());
         }
         return null;
+    }
+
+    @Override
+    public void deleteRoom(Long roomId) {
+        Optional<Room> theRoom = roomRepo.findById(roomId);
+        if (theRoom.isPresent()) {
+            roomRepo.deleteById(roomId);
+        }
+    }
+
+    @Override
+    public Room updateRoom(Long roomId, String roomType, BigDecimal roomPrice, byte[] photoBytes) {
+        Room room = roomRepo.findById(roomId).orElseThrow(() -> new ResourceNotFoundException("Khong tim thay id room Trieu oi"));
+        if (roomType != null) room.setRoomType(roomType);
+        if (roomPrice != null) room.setRoomPrice(roomPrice);
+        if (photoBytes != null && photoBytes.length > 0) {
+            try {
+                room.setPhoto(new SerialBlob(photoBytes));
+            } catch (Exception e) {
+                throw new InternalServerException("Loi update Internal Trieu oi !");
+            }
+        }
+        return roomRepo.save(room);
+    }
+
+    @Override
+    public Optional<Room> getRoomById(Long roomId) {
+        return Optional.of(roomRepo.findById(roomId).get());
     }
 }

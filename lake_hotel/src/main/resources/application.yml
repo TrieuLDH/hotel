@@ -17,3 +17,14 @@ spring:
       max-file-size: 5MB
       max-request-size: 5MB
       file-size-threshold: 2KB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: trieuldh.it.developer@gmail.com
+    password: Trieu050402.
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
